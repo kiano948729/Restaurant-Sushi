@@ -38,8 +38,9 @@
                             @endphp
                             <span class="px-2 py-1 text-xs rounded-full {{ $statusColors[$res->status] ?? 'bg-gray-100 text-gray-700' }}">{{ $res->status }}</span>
                         </td>
+                        
                         <td class="py-4 px-4 flex justify-end gap-2">
-                            @if($res->status === 'In behandeling')
+                            @if($res->status === 'pending')
                                 <form action="{{ route('admin.reservations.updateStatus', $res->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
