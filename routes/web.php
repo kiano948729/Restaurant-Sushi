@@ -1,15 +1,18 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DishController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\MessageController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', fn() => view('dashboard'))
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,4 +20,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Dishes
+    Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');
+    Route::get('dishes/create', [DishController::class, 'create'])->name('dishes.create');
+    Route::post('dishes', [DishController::class, 'store'])->name('dishes.store');
+    Route::get('dishes/{dish}/edit', [DishController::class, 'edit'])->name('dishes.edit');
+    Route::put('dishes/{dish}', [DishController::class, 'update'])->name('dishes.update');
+    Route::delete('dishes/{dish}', [DishController::class, 'destroy'])->name('dishes.destroy');
+
+    // Orders
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+
+    // Reservations
+    Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::patch('reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
+
+    // Messages
+    Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('messages/{id}', [MessageController::class, 'show'])->name('messages.show');
+    Route::patch('messages/{id}/read', [MessageController::class, 'markRead'])->name('messages.markRead');
+    Route::delete('messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
+});
+
+require __DIR__ . '/auth.php';
