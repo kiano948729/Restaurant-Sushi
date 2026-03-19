@@ -11,17 +11,22 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::latest()->get();
-
-        return view('admin.reservations', compact('reservations'));
+        return view('admin.reservations.index', compact('reservations'));
     }
 
     public function updateStatus(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
 
-        $reservation->update([
-            'status' => $request->status
-        ]);
+        $statusMap = [
+            'Geaccepteerd' => 'accepted',
+            'Geweigerd' => 'rejected',
+            'In behandeling' => 'pending',
+        ];
+
+        $status = $statusMap[$request->status] ?? $request->status;
+
+        $reservation->update(['status' => $status]);
 
         return redirect()->route('admin.reservations.index');
     }

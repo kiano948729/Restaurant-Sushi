@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('../layouts.admin')
 
 @section('content')
 <div class="mb-8 flex items-center justify-between">
@@ -35,13 +35,13 @@
                         <td class="py-4 px-4 text-sm font-semibold text-gray-900">€{{ number_format($dish->price, 2) }}</td>
                         <td class="py-4 px-4 text-right flex justify-end gap-2">
                             <a href="{{ route('admin.dishes.edit', $dish->id) }}" class="text-blue-600 hover:text-blue-700 hover:bg-blue-50 p-2 rounded">
-                                <i class="lucide lucide-edit-2"></i>
+                                <h1>edit</h1>
                             </a>
                             <form action="{{ route('admin.dishes.destroy', $dish->id) }}" method="POST" onsubmit="return confirm('Weet je het zeker?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-700 hover:bg-red-50 p-2 rounded">
-                                    <i class="lucide lucide-trash-2"></i>
+                                    <h1>delete</h1>
                                 </button>
                             </form>
                         </td>
