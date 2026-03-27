@@ -7,8 +7,9 @@ use App\Http\Controllers\Admin\DishController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\MessageController;
-
-Route::get('/', fn() => view('welcome'));
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/dashboard', fn() => view('dashboard'))
     ->middleware(['auth', 'verified'])
@@ -19,6 +20,26 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// users
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/menu', [HomeController::class, 'menu'])->name('menu');
+Route::get('/reserveren', [HomeController::class, 'reserveren'])->name('reserveren');
+Route::get('/over-ons', [HomeController::class, 'overOns'])->name('over-ons');
+Route::post('/reserveren', [HomeController::class, 'storeReservation'])->name('reservations.store');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
+// Cart routes
+Route::prefix('cart')->name('cart.')->group(function () {   
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add/{dish}', [CartController::class, 'add'])->name('add');
+    Route::post('/remove/{dish}', [CartController::class, 'remove'])->name('remove');
+    Route::post('/update/{dish}', [CartController::class, 'update'])->name('update');
+});
+
+// Checkout routes
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
