@@ -53,17 +53,21 @@ class HomeController extends Controller
     {
         return view('over-ons');
     }
+    public function contact()
+    {
+        return view('contact');
+    }
 
     // Reservering opslaan
     public function storeReservation(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:50',
-            'date' => 'required|date',
+            'email' => 'required|email',
+            'phone' => 'required|regex:/^[0-9+\s]+$/',
+            'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
-            'guests' => 'required|integer|min:1',
+            'guests' => 'required'
         ]);
 
         Reservation::create([
