@@ -58,7 +58,7 @@
                             </button>
                         </x-slot>
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.users.edit', Auth::user()->id)">Profile</x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
@@ -123,7 +123,7 @@
                 <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-white/60">{{ Auth::user()->email }}</div>
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')"
+                    <x-responsive-nav-link :href="route('admin.users.edit', Auth::user()->id)"
                         class="text-white hover:text-[#F5A623]">Profile</x-responsive-nav-link>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
