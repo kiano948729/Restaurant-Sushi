@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Dish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DishController extends Controller
 {
@@ -25,10 +26,17 @@ class DishController extends Controller
             'name' => 'required',
             'category' => 'required',
             'description' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
-        Dish::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('dishes', 'public');
+        }
+
+        Dish::create($data);
 
         return redirect()->route('admin.dishes.index')
             ->with('success', 'Gerecht toegevoegd');
@@ -46,11 +54,18 @@ class DishController extends Controller
             'name' => 'required',
             'category' => 'required',
             'description' => 'required',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
         $dish = Dish::findOrFail($id);
-        $dish->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('dishes', 'public');
+        }
+
+        $dish->update($data);
 
         return redirect()->route('admin.dishes.index')
             ->with('success', 'Gerecht aangepast');
@@ -58,7 +73,13 @@ class DishController extends Controller
 
     public function destroy($id)
     {
-        Dish::destroy($id);
+        $dish = Dish::findOrFail($id);
+
+        if ($dish->image && Storage::disk('public')->exists($dish->image)) {
+            Storage::disk('public')->delete($dish->image);
+        }
+
+        $dish->delete();
 
         return redirect()->route('admin.dishes.index')
             ->with('success', 'Gerecht verwijderd');
