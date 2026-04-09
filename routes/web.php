@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/dashboard', fn() => view('dashboard'))
     ->middleware(['auth', 'verified'])
@@ -27,10 +28,10 @@ Route::get('/menu', [HomeController::class, 'menu'])->name('menu');
 Route::get('/reserveren', [HomeController::class, 'reserveren'])->name('reserveren');
 Route::get('/over-ons', [HomeController::class, 'overOns'])->name('over-ons');
 Route::post('/reserveren', [HomeController::class, 'storeReservation'])->name('reservations.store');
-Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 // Cart routes
-Route::prefix('cart')->name('cart.')->group(function () {   
+Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add/{dish}', [CartController::class, 'add'])->name('add');
     Route::post('/remove/{dish}', [CartController::class, 'remove'])->name('remove');
