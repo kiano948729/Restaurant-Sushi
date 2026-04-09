@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Dish extends Model
 {
@@ -21,5 +22,9 @@ class Dish extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? Storage::url($this->image) : 'https://via.placeholder.com/400x300?text=Geen+foto';
     }
 }
