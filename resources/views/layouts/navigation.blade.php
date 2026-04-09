@@ -28,8 +28,10 @@
                             </span>
                         @endif
                     </x-nav-link>
-                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')"
-                        class="text-white hover:text-[#F5A623]">Login</x-nav-link>
+                    @guest
+                        <x-nav-link :href="route('login')" :active="request()->routeIs('login')"
+                            class="text-white hover:text-[#F5A623]">Login</x-nav-link>
+                    @endguest
                     @auth
                         @if(Auth::user()->name)
                             <x-nav-link :href="route('admin.dashboard')" class="text-white hover:text-[#F5A623]">
@@ -103,6 +105,10 @@
                     <span
                         class="ml-1 bg-[#F5A623] text-[#0F0F0F] px-2 rounded-full text-xs font-bold">{{ count(session('cart')) }}</span>
                 @endif
+                @guest
+                    <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')"
+                        class="text-white hover:text-[#F5A623]">Login</x-responsive-nav-link>
+                @endguest
             </x-responsive-nav-link>
             @auth
                 @if(Auth::user()->name)
