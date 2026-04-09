@@ -60,6 +60,11 @@
                     Berichten
                 </a>
 
+                <a href="{{ route('admin.users.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800 {{ request()->routeIs('admin.users.*') ? 'bg-gray-800' : '' }}">
+                    <i data-lucide="user-plus"></i>
+                    Medewerkers
+                </a>
             </nav>
 
             <!-- User section -->
