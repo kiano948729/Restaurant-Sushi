@@ -69,9 +69,14 @@
                     {{ auth()->user()->name }}
                 </div>
 
+                <a href="{{ route('home') }}"
+                    class="flex items-center gap-2 text sm hover:text-white hover:bg-gray-800">
+                    <i data-lucide="home"></i>
+                    home
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="flex items-center gap-2 text-sm hover:text-white">
+                    <button class="flex items-center gap-2 text-sm hover:text-white hover:bg-gray-800">
                         <i data-lucide="log-out"></i>
                         Logout
                     </button>
