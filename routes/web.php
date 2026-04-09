@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/dashboard', fn() => view('dashboard'))
     ->middleware(['auth', 'verified'])
@@ -65,6 +66,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('messages/{id}', [MessageController::class, 'show'])->name('messages.show');
     Route::patch('messages/{id}/read', [MessageController::class, 'markRead'])->name('messages.markRead');
     Route::delete('messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
-});
 
+    Route::resource('users', UserController::class);
+
+});
 require __DIR__ . '/auth.php';
