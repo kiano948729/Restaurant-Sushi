@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/dashboard', fn() => view('dashboard'))
     ->middleware(['auth', 'verified'])
@@ -27,10 +29,10 @@ Route::get('/menu', [HomeController::class, 'menu'])->name('menu');
 Route::get('/reserveren', [HomeController::class, 'reserveren'])->name('reserveren');
 Route::get('/over-ons', [HomeController::class, 'overOns'])->name('over-ons');
 Route::post('/reserveren', [HomeController::class, 'storeReservation'])->name('reservations.store');
-Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 // Cart routes
-Route::prefix('cart')->name('cart.')->group(function () {   
+Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add/{dish}', [CartController::class, 'add'])->name('add');
     Route::post('/remove/{dish}', [CartController::class, 'remove'])->name('remove');
@@ -64,6 +66,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('messages/{id}', [MessageController::class, 'show'])->name('messages.show');
     Route::patch('messages/{id}/read', [MessageController::class, 'markRead'])->name('messages.markRead');
     Route::delete('messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
-});
 
+    Route::resource('users', UserController::class);
+
+});
 require __DIR__ . '/auth.php';

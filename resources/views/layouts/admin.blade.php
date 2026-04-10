@@ -60,6 +60,11 @@
                     Berichten
                 </a>
 
+                <a href="{{ route('admin.users.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800 {{ request()->routeIs('admin.users.*') ? 'bg-gray-800' : '' }}">
+                    <i data-lucide="user-plus"></i>
+                    Medewerkers
+                </a>
             </nav>
 
             <!-- User section -->
@@ -69,9 +74,14 @@
                     {{ auth()->user()->name }}
                 </div>
 
+                <a href="{{ route('home') }}"
+                    class="flex items-center gap-2 text sm hover:text-white hover:bg-gray-800">
+                    <i data-lucide="home"></i>
+                    home
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="flex items-center gap-2 text-sm hover:text-white">
+                    <button class="flex items-center gap-2 text-sm hover:text-white hover:bg-gray-800">
                         <i data-lucide="log-out"></i>
                         Logout
                     </button>
