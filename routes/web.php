@@ -31,6 +31,7 @@ Route::get('/over-ons', [HomeController::class, 'overOns'])->name('over-ons');
 Route::post('/reserveren', [HomeController::class, 'storeReservation'])->name('reservations.store');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/message', [HomeController::class, 'storeMessage'])->name('message.store');
 // Cart routes
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
