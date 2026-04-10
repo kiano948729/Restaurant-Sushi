@@ -18,14 +18,7 @@
 
                     <!-- Toast -->
                     @if(session('success'))
-                        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-                            class="absolute top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg transition transform"
-                            x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 translate-y-2"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-300"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 translate-y-2">
+                        <div class="bg-green-500 text-white p-4 rounded">
                             {{ session('success') }}
                         </div>
                     @endif

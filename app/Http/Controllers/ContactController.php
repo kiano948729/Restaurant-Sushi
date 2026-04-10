@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Symfony\Component\Mime\Part\TextPart;
+use App\Models\ContactMessage;
+
 class ContactController extends Controller
 {
     public function index()
     {
         return view('contact');
     }
-
 
     public function send(Request $request)
     {
@@ -22,12 +21,8 @@ class ContactController extends Controller
             'bericht' => 'required|string',
         ]);
 
-        Mail::raw($data['bericht'], function ($message) use ($data) {
-            $message->to('stoelpootappelsap@gmail.com')
-                ->subject($data['onderwerp'])
-                ->from($data['email'], $data['naam']);
-        });
+        ContactMessage::create($data);
 
-        return back()->with('success', 'Bedankt! Uw bericht is verzonden.');
+        return back()->with('success', 'Bedankt! Uw bericht is opgeslagen.');
     }
 }

@@ -59,6 +59,12 @@
                     <i data-lucide="mail"></i>
                     Berichten
                 </a>
+                
+                <a href="{{ route('admin.contact-messages.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800 {{ request()->routeIs('admin.contact-messages.*') ? 'bg-gray-800' : '' }}">
+                    <i data-lucide="mail"></i>
+                    Contact berichten
+                </a>
 
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-800 {{ request()->routeIs('admin.users.*') ? 'bg-gray-800' : '' }}">
