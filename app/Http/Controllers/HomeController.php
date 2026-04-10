@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Dish;
 use App\Models\Reservation;
+use App\Models\Message;
 
 class HomeController extends Controller
 {
@@ -13,26 +14,33 @@ class HomeController extends Controller
     {
         $featuredDishes = Dish::where('featured', true)->get();
 
-        // Reviews hardcoded, dit doe ik later ff uit de db had hier ff geen zin in 
-        $reviews = [
-            [
-                'name' => 'Sarah de Vries',
-                'rating' => 5,
-                'text' => 'De beste sushi van Amsterdam! Superverse ingrediënten en uitstekende service.',
-            ],
-            [
-                'name' => 'Michael Chen',
-                'rating' => 5,
-                'text' => 'Authentieke Japanse smaken. De chef weet echt wat hij doet. Aanrader!',
-            ],
-            [
-                'name' => 'Lisa Bakker',
-                'rating' => 5,
-                'text' => 'Prachtige ambiance en heerlijk eten. Perfect voor een speciale avond.',
-            ],
-        ];
+        // Alleen goedgekeurde (read = true) berichten tonen
+        $reviews = Message::where('read', true)
+            ->latest()
+            ->take(3)
+            ->get();
 
         return view('home', compact('featuredDishes', 'reviews'));
+    }
+
+    public function storeMessage(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email',
+            'message' => 'required',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        Message::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'message' => $request->message,
+            'rating' => $request->rating,
+            'read' => false,// moet eerst goedgekeurd worden
+        ]);
+
+        return redirect()->back()->with('success', 'Bedankt voor je review!');
     }
 
     // Menu pagina
