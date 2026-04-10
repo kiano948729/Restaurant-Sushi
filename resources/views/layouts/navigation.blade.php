@@ -28,20 +28,20 @@
                             </span>
                         @endif
                     </x-nav-link>
-                    @guest
-                        <x-nav-link :href="route('login')" :active="request()->routeIs('login')"
-                            class="text-white hover:text-[#F5A623]">Login</x-nav-link>
-                    @endguest
-                    @auth
-                        @if(Auth::user()->name)
-                            <x-nav-link :href="route('admin.dashboard')" class="text-white hover:text-[#F5A623]">
-                                Dashboard
-                            </x-nav-link>
-                        @endif
-                    @endauth
                 </div>
             </div>
 
+            @guest
+                <x-nav-link :href="route('login')" :active="request()->routeIs('login')"
+                    class="text-white hover:text-[#F5A623]">Login</x-nav-link>
+            @endguest
+            @auth
+                @if(Auth::user()->name)
+                    <x-nav-link :href="route('admin.dashboard')" class="text-white hover:text-[#F5A623]">
+                        Dashboard
+                    </x-nav-link>
+                @endif
+            @endauth
             @auth
                 <div class="hidden sm:flex sm:items-center sm:space-x-4">
                     <x-dropdown align="right" width="48">
