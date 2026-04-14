@@ -41,13 +41,13 @@
                         
                         <td class="py-4 px-4 flex justify-end gap-2">
                             @if($res->status === 'pending')
-                                <form action="{{ route('admin.reservations.updateStatus', $res->id) }}" method="POST">
+                                <form action="{{ route('admin.reservations.update', $res->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="Geaccepteerd">
                                     <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Accepteren</button>
                                 </form>
-                                <form action="{{ route('admin.reservations.updateStatus', $res->id) }}" method="POST">
+                                <form action="{{ route('admin.reservations.update', $res->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="Geweigerd">

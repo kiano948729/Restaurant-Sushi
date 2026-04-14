@@ -1,80 +1,96 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DishController;
-use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\ReservationController;
-use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\{
+    ProfileController,
+    HomeController,
+    CartController,
+    CheckoutController,
+    ContactController
+};
+use App\Http\Controllers\Admin\{
+    DashboardController,
+    DishController,
+    OrderController,
+    ReservationController,
+    MessageController,
+    UserController,
+    ContactMessageController
+};
 
-Route::get('/dashboard', fn() => view('dashboard'))
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Public routes 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+    Route::get('/menu', 'menu')->name('menu');
+    Route::match(['get', 'post'], '/reserveren', 'reserveren')->name('reserveren');
+    Route::get('/over-ons', 'overOns')->name('over-ons');
+
+    Route::post('/reserveren', 'storeReservation')->name('reservations.store');
+    Route::post('/message', 'storeMessage')->name('message.store');
 });
 
-// users
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/menu', [HomeController::class, 'menu'])->name('menu');
-Route::get('/reserveren', [HomeController::class, 'reserveren'])->name('reserveren');
-Route::get('/over-ons', [HomeController::class, 'overOns'])->name('over-ons');
-Route::post('/reserveren', [HomeController::class, 'storeReservation'])->name('reservations.store');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
-Route::post('/message', [HomeController::class, 'storeMessage'])->name('message.store');
-// Cart routes
-Route::prefix('cart')->name('cart.')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('index');
-    Route::post('/add/{dish}', [CartController::class, 'add'])->name('add');
-    Route::post('/remove/{dish}', [CartController::class, 'remove'])->name('remove');
-    Route::post('/update/{dish}', [CartController::class, 'update'])->name('update');
+// Contact routes
+
+Route::controller(ContactController::class)->group(function () {
+    Route::get('/contact', 'index')->name('contact');
+    Route::post('/contact/send', 'send')->name('contact.send');
+});
+
+// Cart routes 
+
+Route::prefix('cart')->name('cart.')->controller(CartController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/add/{dish}', 'add')->name('add');
+    Route::post('/remove/{dish}', 'remove')->name('remove');
+    Route::post('/update/{dish}', 'update')->name('update');
 });
 
 // Checkout routes
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::controller(CheckoutController::class)->group(function () {
+    Route::get('/checkout', 'index')->name('checkout');
+    Route::post('/checkout', 'store')->name('checkout.store');
+});
 
-    // Dishes
-    Route::get('dishes', [DishController::class, 'index'])->name('dishes.index');
-    Route::get('dishes/create', [DishController::class, 'create'])->name('dishes.create');
-    Route::post('dishes', [DishController::class, 'store'])->name('dishes.store');
-    Route::get('dishes/{dish}/edit', [DishController::class, 'edit'])->name('dishes.edit');
-    Route::put('dishes/{dish}', [DishController::class, 'update'])->name('dishes.update');
-    Route::delete('dishes/{dish}', [DishController::class, 'destroy'])->name('dishes.destroy');
+// Auth routes
 
-    // Orders
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
 
-    // Reservations
-    Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
-    Route::patch('reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
 
-    // Messages
-    Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::get('messages/{id}', [MessageController::class, 'show'])->name('messages.show');
-    Route::patch('messages/{id}/read', [MessageController::class, 'markRead'])->name('messages.markRead');
-    Route::delete('messages/{id}', [MessageController::class, 'destroy'])->name('messages.destroy');
-
-    Route::resource('users', UserController::class);
-
-    Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
-        Route::get('/', [ContactMessageController::class, 'index'])->name('index');
-        Route::get('/{message}', [ContactMessageController::class, 'show'])->name('show');
-        Route::post('/{message}/read', [ContactMessageController::class, 'markAsRead'])->name('read');
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 });
+
+
+// Admin routes
+
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('dishes', DishController::class);
+        Route::resource('users', UserController::class);
+
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+
+        Route::resource('reservations', ReservationController::class)->only(['index', 'update']);
+
+        Route::resource('messages', MessageController::class)
+            ->only(['index', 'show', 'update', 'destroy']);
+
+        Route::resource('contact-messages', ContactMessageController::class)
+            ->only(['index', 'show', 'update']);
+        Route::post('contact-messages/{message}', [ContactMessageController::class, 'update'])
+            ->name('contact-messages.update');
+    });
+
 require __DIR__ . '/auth.php';
