@@ -19,7 +19,7 @@ class MessageController extends Controller
         return view('admin.messages.show', compact('message'));
     }
 
-    public function markRead($id)
+    public function update($id)
     {
         $message = Message::findOrFail($id);
         $message->update(['read' => true]);

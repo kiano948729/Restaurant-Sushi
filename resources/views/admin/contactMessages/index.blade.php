@@ -41,10 +41,10 @@
                             </a>
 
                             @if(!$message->is_read)
-                                <form method="POST" action="{{ route('admin.contact-messages.read', $message) }}">
+                                <form method="POST" action="{{ route('admin.contact-messages.update', $message) }}">
                                     @csrf
                                     <button class="px-3 py-1 bg-green-500 text-white rounded text-sm">
-                                        Mark as read
+                                        Markeren als gelezen
                                     </button>
                                 </form>
                             @endif

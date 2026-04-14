@@ -27,7 +27,7 @@
 
         <div class="flex gap-2 mt-4">
             @if(!$message->read)
-                <form action="{{ route('admin.messages.markRead', $message->id) }}" method="POST">
+                <form action="{{ route('admin.messages.show', $message->id) }}" method="POST">
                     @csrf
                     @method('PATCH')
                     <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-1">
