@@ -19,7 +19,7 @@ class ContactMessageController extends Controller
         return view('admin.contactMessages.show', compact('message'));
     }
 
-    public function markAsRead(ContactMessage $message)
+    public function update(ContactMessage $message)
     {
         $message->update([
             'is_read' => true

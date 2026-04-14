@@ -14,7 +14,7 @@ class ReservationController extends Controller
         return view('admin.reservations.index', compact('reservations'));
     }
 
-    public function updateStatus(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
 
